@@ -70,4 +70,108 @@ FROM lprod
 
 SELECT buyer_id AS 바이어아이디, buyer_name AS 이름
 FROM buyer
-    
+
+AS 를 써도 되고 안 써도 됨
+그리고 한글로 컬럼명을 할 수도 있지만 잘 안 씀
+
+literal : 값 자체
+literal 표기법 : 언어마다 다르다
+
+SELECT empno, ename || ', World',
+CONCAT(ename, ', World') -- 두개의 문자열을 입력받아 결합하고 결합된 문자열을 반환 해준다
+FROM emp;
+
+SELECT '아이디 : ' || userid
+FROM USERS
+
+
+SELECT  CONCAT('아이디 : ', userid)
+FROM USERS
+
+Literal Character, Conctenation(문자열 결합 실습 sel_con1)
+
+SELECT 'SELECT * FROM ' || table_name || ';' QUERY,
+CONCAT(CONCAT('SELECT * FROM ', table_name), ';') QUERY
+FROM user_tables
+
+SELECT * FROM BONUS;
+SELECT * FROM EMP;
+SELECT * FROM DEPT;
+SELECT * FROM SALGRADE;
+SELECT * FROM LPROD;
+SELECT * FROM BUYER;
+SELECT * FROM PROD;
+SELECT * FROM BUYPROD;
+SELECT * FROM MEMBER;
+SELECT * FROM CART;
+SELECT * FROM RANGER;
+SELECT * FROM RANGERDEPT;
+SELECT * FROM USERS;
+
+조건에 맞는 데이터 조회하기
+WHERE 절 조건연산자
+연산자 의미
+= 같은 값
+!=, <> 다른 값
+> 클때
+>= 크거나 같음
+< 작을때
+<= 작거나 같음
+
+
+--부서번호가 10인 직원들만
+SELECT *
+FROM emp
+WHERE deptno = 10 ;
+
+--uwers 테이블에서 userid 컬럼의 값이 brown인 사용자만 조회
+--SQL 키워드는 대소문자를 가리지 않지만 데이터 값은 대소문자를 가린다
+SELECT *
+FROM users
+WHERE userid = 'brown' ;
+
+--emp 테이블에서 부서번호가 20번보다 큰부서에 속한 직원 조회
+SELECT *
+FROM emp
+WHERE deptno > 20;
+
+--emp 테이블에서 부서번호가 20번 부서에 속하지 않은 모든 직원 조회
+SELECT *
+FROM emp
+WHERE deptno != 20;
+
+WHERE : 기술한 조건을 참(TRUE)로 만족하는 행들만 조회한다(FILTER)
+
+SELECT *
+FROM emp
+WHERE 20 = 20;
+
+SELECT *
+FROM emp
+WHERE 0 = 20;
+
+SELECT empno, ename, hiredate
+FROM emp
+WHERE hiredate > '81/03/01'
+
+yyyy/mm/dd korea
+mm/dd/yy USA
+
+국가에 따라 날짜 표기가 달라서 저렇게 하면 좀 위험할 수 있음
+문자열이 아니라 날짜로 하는게 좋다
+
+TO_DATE('날짜 문자열', 날짜 문자열의 포맷팅)
+TO_DATE('1981/03/01', 'YYYY/MM/DD')
+
+SELECT empno, ename, hiredate
+FROM emp
+WHERE hiredate > TO_DATE('1981/03/01', 'YYYY/MM/DD');
+
+--이렇게 날짜로 하는게 안전하다
+
+4자리 표기법으로 RRRR,YYYY 로 하는게 확실하고 안전하다
+2자리는 좀 그렇다
+
+
+
+
