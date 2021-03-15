@@ -99,6 +99,14 @@ LIKE 연산자 : 문자열 매칭 조회
         1. 얼마 안 된 맥북에어 팔아요
         2. 맥북에어 팔아요
         3. 팝니다 맥북에어
+테이블 : 게시글
+제목 컬럼 : 제목
+SELECT *
+FROM 게시글
+WHERE 제목 LIKE '%맥북에어%' OR 내용 LIKE '%맥북에어%';
+        
+        
+        
 % : 0 개 이상의 문자
 _ : 1 개 이상의 문자
 c% < - ? 
@@ -119,4 +127,171 @@ userid에 l이 들오가는 모든 사용자 조회
 SELECT *
 FROM users
 WHERE userid LIKE '%l%';
+
+실습 where 4
+
+member 테이블에서 회원의 성이 [신]씨인 사람의 mem_id, mem_name을 조회하는 쿼리를 작성하시오
+
+SELECT mem_id, mem_name
+FROM member
+WHERE mem_name LIKE '신%';
+
+실습 where 5 
+
+이름에 [이] 자가 들어가는 모든 사람의 mem_id, mem_name을 조회하는 쿼리를 작성하시오
+
+SELECT mem_id, mem_name
+FROM member
+WHERE mem_name LIKE '%이%';
+
+IS, IS NOT (NULL 비교)
+emp 테이블에서 comm 컬럼의 값이 null 인 사람만 조회
+SELECT *
+FROM emp
+WHERE comm IS NULL;
+
+SELECT *
+FROM emp
+WHERE comm IS NOT NULL;
+
+emp 테이블에서 매니저가 없는 직원만 조회
+SELECT *
+FROM emp
+WHERE mgr is NULL;
+
+BETWEEN AND, IN, LIKE, IS
+논리 연산자 : AND, OR, NOT
+AND : 두 가지 조건을 동시에 만족시키는지 확인할 때
+    조건1 AND 조건2
+OR : 두 가지 조건 중 하나라도 만족시키는지 확인할 때
+    조건1 OR 조건2
+NOT : 부정형 논리연산자, 특정 조건을 부정
+    mgr IS NULL : mgr 컬럼의 값이 NULL인 사람만 조회
+    mgr IS NOT NULL : mgr 컬럼의 값이 NULL이 아닌 사람만 조회
+    
+
+emp 테이블에서 mgr의 사번이 7698이면서
+sal 값이 1000보다 큰 직원만 조회
+
+
+-- 조건의 순서는 결과와 무관하다
+SELECT *
+FROM emp
+WHERE mgr = 7698
+  AND sal > 1000;
+
+SELECT *
+FROM emp
+WHERE mgr = 7698
+   OR sal > 1000;
+
+AND 조건이 많아지면 : 조회되는 데이터 건수는 줄어든다
+OR 조건이 많아지면 : 조회되는 데이터 건수는 많아진다
+
+NOT : 부정형 연산자, 다른 연산자와 결합하여 쓰인다
+    IS NOT, NOT IN, NOT LIKE ...
+    
+
+-- 직원의 부서번호과 30번이 아닌 직원들    
+SELECT *
+FROM emp
+WHERE deptno NOT IN (30);
+
+SELECT *
+FROM emp
+WHERE deptno != 30;
+
+SELECT *
+FROM emp
+WHERE ename NOT LIKE 'S%';
+
+NOT IN 연산자 사용시 주의점 : 비교값 중에 NULL이 포함되면 데이터가 조회되지 않는다
+
+SELECT *
+FROM emp
+WHERE mgr IN (7698,7839,NULL);
+
+==>
+    mgr = 1698 or 7839 or mgr = null --oracle의 문제 equal 로 치환하게 되어 null 검색이 안 된다.
+
+SELECT *
+FROM emp
+WHERE mgr NOT IN (7698,7839,NULL);
+
+==>
+    mgr != 7698 and mgr != 7839 and mgr != null --oracle의 문제 equal 로 치환하게 되어 null 검색이 안 된다.
+
+mgr = 7698 ==> mgr != 7698
+or         ==> and
+
+mgr != NULL -- <- 이 부분이 항상 거짓으로 나오게 된다.
+
+-- 이 부분은 시험에 나옵니다
+
+where 7
+
+emp 테이블에서 job이 salesman 이고 입사일자가 1981년 6월 1일 이후인 직원의 정보를 다음과 같이 조회하세요
+
+SELECT *
+FROM emp
+WHERE job = 'SALESMAN' AND hiredate >= TO_DATE('19810601','YYYYMMDD');
+
+SELECT *
+FROM emp
+WHERE job LIKE 'SALESMAN' AND hiredate >= TO_DATE('19810601','YYYYMMDD');
+
+
+where 8
+
+emp 테이블에서 부서번호가 10번이 아니고 입사일자가 1981년 6월 1일 이후인 직원의 정보를 다음과 같이 조회 하세요 
+
+SELECT *
+FROM emp
+WHERE deptno != 10 AND hiredate >= TO_DATE('19810601','YYYYMMDD');
+
+where 9
+
+SELECT *
+FROM emp
+WHERE deptno NOT IN(10) AND hiredate >= TO_DATE('19810601','YYYYMMDD');
+
+where 10
+emp 테이블에서 부서번호가 10번이 아니고 입사일자가 1981년 6월 1일 이후인 직원의 정보를 다음과 같이 조회 하세요
+(부서는 10, 20, 30만 있다고 가정하고 IN 연산자 사용)
+
+SELECT *
+FROM emp
+WHERE deptno IN(20, 30) -- deptno NOT IN(10)
+AND hiredate >= TO_DATE('19810601','YYYYMMDD');
+
+where 11
+emp 테이블에서 job이 SALESMAN이거나 입사일자가 1981년 6월 1일 이후인 직원의 정보를 다음과 같이 조회 하세요
+
+SELECT *
+FROM emp
+WHERE job IN 'SALESMAN' OR hiredate >= TO_DATE('19810601','YYYYMMDD');
+
+where 12 풀면 좋고, 못 풀어도 괜찮은 문제
+emp 테이블에서 job이 SALESMAN이거나 사원번호가 78로 시작하는 직원의 정보를 다음과 같이 조회하세요
+
+SELECT *
+FROM emp
+WHERE empno LIKE '78%' OR job = 'SALESMAN';
+
+where 13 풀면 좋고, 못 풀어도 괜찮은 문제
+emp 테이블에서 job이 SALESMAN이거나 사원번호가 78로 시작하는 직원의 정보를 다음과 같이 조회하세요 (다만 LIKE를 쓰지 않고)
+
+SELECT *
+FROM emp
+WHERE (empno >= 7800 AND empno <= 7899) OR job = 'SALESMAN';
+
+
+
+
+
+
+
+
+
+
 
