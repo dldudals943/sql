@@ -205,17 +205,65 @@ FROM
 FROM (SELECT empno, ename -- 인라인 뷰
       FROM emp
       ORDER BY ename))
+WHERE rn BETWEEN (:page-1)*:pageSize+1 AND :page*:pageSize; -- 바인딩 변수 방식
+
+
+WHERE rn BETWEEN 1 AND 15;
+WHERE rn BETWEEN 1 AND 5;
+WHERE rn BETWEEN 6 AND 10;
+
+pageSize : 5건
+1 page : rn BETWEEN 1 AND 5;
+2 page : rn BETWEEN 6 AND 10;
+3 page : rn BETWEEN 11 AND 15;
+n page : rn BETWEEN n*5-4 AND n*5 ;
+n page : rn BETWEEN n*(pageSize)-(pageSize - 1) AND n*(pageSize);
+
+n page : rn BETWEN (page-1)*pageSize+1 AND page*pageSize;
+
+row_1
+emp 테이블에서 ROWNUM 값이 1~10인 값만 조회하는 쿼리를 작성해보세요
+(정렬없이 진행하세요, 결과는 화면과 다를 수 있습니다.)
+SELECT *
+FROM(SELECT ROWNUM rn, empno, ename
+FROM emp)
 WHERE rn BETWEEN 1 AND 10;
 
+SELECT ROWNUM rn, empno, ename
+FROM emp
+WHERE ROWNUM BETWEEN 1 AND 10;
+
+row_2
+ROWNUM 값이 11~20(11~14)인 값만 조회하는 쿼리를 작성해보세요
+SELECT *
+FROM
+(SELECT ROWNUM rn, empno, ename
+FROM emp)
+WHERE rn BETWEEN 11 AND 20
+
+row_3
+emp 테이블의 사원 정보를 이름컬럼으로 오름차순 적용 했을 때의 11~14번째 행을 다음과 같이 조회하는 쿼리를 작성해보세요
+SELECT a.*
+FROM(SELECT ROWNUM rn, empno, ename
+FROM(SELECT empno, ename FROM emp ORDER BY ename)) a
+WHERE rn BETWEEN 11 AND 14;
+
+rownum 용도
+    페이징 처리
+    다른 행과 구분되는 유일한 가상의 컬럼 생성/활용
+    튜닝시
+        inline view 안에서 rownum 사용시 view merging이 일어나지 않는다
+        
+SELECT ROWNUM rn, emp.* --에러
+FROM emp e;
 
 
 
+SELECT ROWNUM rn, e.empno
+FROM emp e, emp m, dept; -- 테이블 명에 별칭을 붙일 때는 AS 라고 쓸 수가 없다
 
-
-
-
-
-
+SELECT empno || 'yeah' A
+FROM emp -- 잠깐 ALIAS 복습
 
 
 
