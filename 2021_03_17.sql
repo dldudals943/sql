@@ -171,16 +171,75 @@ SELECT empno, ename, sal, TRUNC(sal/1000) AS 몫, MOD(sal, 1000) AS 나머지
 FROM emp;
 
 날짜 <--> 문자
-서버의 현재시간
+서버의 현재시간 : SYSDATE
+SELECT SYSDATE + 1 -- 하루가 늘어남
+FROM dual;
+
+SELECT SYSDATE + 1/24 -- 한 시간이 늘어남
+FROM dual;
+
+SELECT SYSDATE + 1/24/60 -- 1분이 늘어남
+FROM dual;
+
+SELECT SYSDATE + 1/24/60/60 -- 1초가 늘어남
+FROM dual;
+
+Function (date 실습 fn1)
+
+1. 2019년 12월 31일을 date형으로 표현
+3. 2019년 12월 31일을 date형으로 표현하고 5일 이전 날짜
+3. 현재 날짜
+4. 현재 날짜에서 3일 전 값
+
+위 4개 컬럼을 생성하여 다음과 같이 조회하는 쿼리를 작성하세요
+SELECT TO_DATE('20191231' ,'YYYYMMDD') LASTDAY, TO_DATE('20191231' ,'YYYYMMDD')-5 LASTDAY_BEFORE5, SYSDATE NOW, SYSDATE-3 NOW_BEFORE3
+FROM dual;
+
+TO_DATE : 인자 - 문자, 문자의 형식
+TO_CHAR : 인자 - 날짜, 문자의 형식
 
 
+NLS : YYYY/MM/DD/HH24:MI:SS
+SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD'), TO_CHAR(SYSDATE, 'MI:SS'), TO_CHAR(SYSDATE, 'DD/HH24:MI:SS')
+FROM dual;
 
+-- 52-53
+-- 주간요일(D) (0-일요일, 1-월요일, 2-화요일, ... 6-토요일)
 
+SELECT SYSDATE, TO_CHAR(SYSDATE, 'IW'), TO_CHAR(SYSDATE, 'D')
+FROM dual;
 
+date 
+    FORMAT
+        YYYY : 4자리 년도
+        MM : 2자리 월
+        DD : 2자리 일자
+        D : 주간 일자(1~7)
+        IW : 주차 (1~53)
+        HH, HH12 : 2자리 시간(12시간 표현)
+        HH24 : 2자리 시간(24시간 표현)
+        MI : 2자리 분
+        SS : 2자리 초
 
+Function (date 실습 fn2)
 
+오늘 날짜를 다음과 같은 포맷으로 조회하는 쿼리를 작성하시오
+1. 년-월-일
+2. 년-월-일 시간(24)-분-초
+3. 일-월-년
 
+SELECT TO_CHAR(SYSDATE,'YYYY-MM-DD') DT_DASH, TO_CHAR(SYSDATE,'YYYY-MM-DD HH24-MI-SS') DT_DASH_WITH_TIME, TO_CHAR(SYSDATE,'DD-MM-YYYY') DT_DD_MM_YYYY
+FROM dual;
 
+SELECT TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'), 'YYYY/MM/DD') DT_DASH
+FROM dual;
+
+'2021-03-17' ==> '2021-03-17 12:41:00'
+SELECT TO_CHAR(TO_DATE('2021-03-17' , 'YYYY-MM-DD'),'YYYY-MM-DD HH24:MI:SS') time
+FROM dual;
+
+SELECT SYSDATE,TO_DATE(TO_CHAR(SYSDATE-5, 'YYYYMMDD'), 'YYYY/MM/DD') BEFORE5
+FROM dual;
 
 
 
