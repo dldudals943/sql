@@ -216,7 +216,86 @@ SELECT empno, ename, TO_CHAR(hiredate, 'YY/MM/DD') hiredate,
 FROM emp;
 --TO_CHAR까지만하고 바로 MOD를 해도 묵시적형변환을 해서 나눠진다 TO_NUMBER 안해도 됨
 
+cond3
+SELECT userid, usernm, TO_CHAR(reg_dt, 'YY/MM/DD') reg_dt,
+    DECODE(MOD(TO_NUMBER(TO_CHAR(reg_Dt,'YYYY')), 2) , MOD(TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')), 2), '건강검진 대상자', '건강검진 비대상자')
+    CONTACT_TO_DOCTOR
+FROM users
+WHERE userid in('brown','cony','james','moon','sally');
 
+GROUP FUNCTION : 여러 행을 그룹으로 하여 하나의 행으로 결과값을 반환하는 함수
+             ex: 부서별 조직원수, 가장 높은 급여, 부서별 급여평균
+AVG : 평균
+COUNT : 건수
+MAX : 최대값
+MIN : 최소값
+SUM : 합 -- 다 많이 쓰임
+
+SELECT deptno, MAX(sal), MIN(sal), ROUND(AVG(sal),2), SUM(sal), COUNT(sal), --그룹핑된 행중에 sal 컬럼이 null이 아닌 행의 건수
+    COUNT(mgr), --그룹핑된 행중에 mgr 컬럼의 값이 null이 아닌 행의 건수
+    COUNT(*) entire -- 그룹핑된 행 건수
+FROM emp
+GROUP BY deptno
+ORDER BY deptno DESC;
+
+--GROUP BY 를 사용하지 않을 경우 테이블의 모든 행을 하나의 행으로 그룹핑한다.
+SELECT COUNT(*), MAX(sal) , MIN(sal), ROUND(AVG(sal),2), SUM(sal), COUNT(sal)
+FROM emp;
+
+--여기서 핵심은 부서번호가 같은 걸 묶는다는 것이다.
+
+--GROUP BY 절에 나온 컬럼이 SELECT절에 그룹함수가 적용되지 않은채로 기술되면 에러
+
+SELECT deptno, MAX(sal), MIN(sal), ROUND(AVG(sal),2), SUM(sal), COUNT(sal), --그룹핑된 행중에 sal 컬럼이 null이 아닌 행의 건수
+    COUNT(mgr), --그룹핑된 행중에 mgr 컬럼의 값이 null이 아닌 행의 건수
+    COUNT(*) entire -- 그룹핑된 행 건수
+FROM emp
+GROUP BY deptno, empno -- deptno와 empno가 둘 다 같은 행을 그룹핑해야한다. 그런데 단 하나도 겹치지 않으므로 14행이 다 뜬다.
+
+SELECT deptno, 'TEST', MAX(sal), MIN(sal), ROUND(AVG(sal),2), SUM(sal), COUNT(sal), --그룹핑된 행중에 sal 컬럼이 null이 아닌 행의 건수
+    COUNT(mgr), --그룹핑된 행중에 mgr 컬럼의 값이 null이 아닌 행의 건수
+    COUNT(*) entire, -- 그룹핑된 행 건수
+    SUM(comm), -- 보통 연산에 null이 들어가면 결과가 null이 되어야하는데 그룹함수가 자동으로 연산에서 null을 제외해준다
+    NVL(SUM(comm), 0), -- 효율적 null - > 0 3회 실행
+    SUM(NVL(comm,0)) -- 비효율적 null - > 0 많이 실행
+FROM emp
+WHERE LOWER(ename) = 'smith'
+GROUP BY deptno
+
+그룹 함수는 WHERE절에서 쓰일 수 없다.
+
+SELECT deptno, 'TEST', MAX(sal), MIN(sal), ROUND(AVG(sal),2), SUM(sal), COUNT(sal), --그룹핑된 행중에 sal 컬럼이 null이 아닌 행의 건수
+    COUNT(mgr), --그룹핑된 행중에 mgr 컬럼의 값이 null이 아닌 행의 건수
+    COUNT(*) entire, -- 그룹핑된 행 건수
+    SUM(comm), -- 보통 연산에 null이 들어가면 결과가 null이 되어야하는데 그룹함수가 자동으로 연산에서 null을 제외해준다
+    NVL(SUM(comm), 0) nvlsum, -- 효율적 null - > 0 3회 실행
+    SUM(NVL(comm,0)) sumnvl -- 비효율적 null - > 0 많이 실행
+FROM emp
+GROUP BY deptno
+HAVING COUNT(*) >=4;
+
+그룹 함수에서 null 컬럼은 계산에서 제외된다
+group by 절에 작성된 컬럼 이외의 컬럼이 select 절에 올 수 없다
+where 절에 그룹 함수를 조건으로 사용할 수 없다
+    having 절 사용
+        where sum(sal) > 3000 (X)
+        having sum(sal) > 3000 (O)
+        
+        
+        
+        
+FUNCTION grp1
+emp 테이블을 이용하여 다음을 구하시오
+
+
+SELECT MAX(sal), MIN(sal), ROUND(AVG(sal),2), SUM(sal), COUNT(sal), COUNT(mgr), COUNT(*)
+FROM emp;
+
+
+grp2
+SELECT MAX(sal), MIN(sal), ROUND(AVG(sal),2), SUM(sal), COUNT(sal), COUNT(mgr), COUNT(*)
+FROM emp
+GROUP BY deptno;
 
 
 
