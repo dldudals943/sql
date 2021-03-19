@@ -222,3 +222,44 @@ SELECT empno, ename, emp.deptno, dname
 FROM emp, dept
 WHERE emp.deptno = dept.deptno AND emp.deptno in(10,30)
 ORDER BY deptno ASC;
+
+join 0_2
+SELECT empno, ename, sal, emp.deptno, dname
+FROM emp, dept
+WHERE emp.deptno = dept.deptno AND emp.sal > 2500
+ORDER BY deptno ASC;
+
+join 0_3
+SELECT empno, ename, sal, emp.deptno, dname
+FROM emp, dept
+WHERE emp.deptno = dept.deptno AND emp.sal > 2500 AND emp.empno > 7600
+ORDER BY deptno ASC;
+
+join0_4
+SELECT empno, ename, sal, emp.deptno, dname
+FROM emp, dept
+WHERE emp.deptno = dept.deptno AND emp.sal > 2500 AND emp.empno > 7600 AND dname = 'RESEARCH'
+ORDER BY deptno ASC;
+-- 또는
+SELECT empno, ename, sal, emp.deptno, dname
+FROM emp, dept
+WHERE emp.deptno = dept.deptno AND emp.sal > 2500 AND emp.empno > 7600 AND emp.deptno = 20
+ORDER BY deptno ASC;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
