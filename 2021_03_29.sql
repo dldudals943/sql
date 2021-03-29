@@ -306,14 +306,13 @@ pre-order
 --------------------------------------------------------------
 
 SELECT
-
-    min(DECODE(D,1,dt,null)) son,
-    min(DECODE(D,2,dt,null)) mon,
-    min(DECODE(D,3,dt,null)) tue,
-    min(DECODE(D,4,dt,null)) wed,
-    min(DECODE(D,5,dt,null)) thu,
-    min(DECODE(D,6,dt,null)) fri,
-    min(DECODE(D,7,dt,null)) sat
+    MIN(DECODE(D,1,dt,null)) son,
+    MIN(DECODE(D,2,dt,null)) mon,
+    MIN(DECODE(D,3,dt,null)) tue,
+    MIN(DECODE(D,4,dt,null)) wed,
+    MIN(DECODE(D,5,dt,null)) thu,
+    MIN(DECODE(D,6,dt,null)) fri,
+    MIN(DECODE(D,7,dt,null)) sat
 FROM
 (SELECT
     CASE
@@ -326,7 +325,6 @@ TO_CHAR(TO_DATE(:YYYYMM,'YYYYMM') + (level - 1),'D') d,
 TO_CHAR(TO_DATE(:YYYYMM,'YYYYMM') + (level - 1),'IW') iw,
 TO_CHAR(TO_DATE(:YYYYMM,'YYYYMM') + (level - 1 - 7),'IW') iwx,
 TO_CHAR(TO_DATE(:YYYYMM,'YYYYMM') + (level - 1),'MM') MM
-
 FROM dual
 CONNECT BY LEVEL <= TO_CHAR(LAST_DAY(TO_DATE(:YYYYMM, 'YYYYMM')), 'DD')) xxx)
 GROUP BY iwn
